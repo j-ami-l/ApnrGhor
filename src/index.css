@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,400;0,700;1,400&display=swap');
+@import "tailwindcss";
+@plugin "daisyui";
+@plugin "@tailwindcss/forms";
+@source "./node_modules/preline/dist/*.js";
+
+
+
+@plugin "daisyui/theme" {
+  name: "lighttheme";
+  color-scheme: light;
+  prefersdark: false;
+
+  --color-base-100: #ffffff;
+  --color-base-200: #f7f7f7;
+  --color-base-300: #ffffff;
+  --color-base-content: #1a1a1a;
+
+  --color-primary: oklch(62.7% 0.194 149.214);
+  --color-primary-content: #ffffff;
+
+  --color-secondary: #141D26; /* navbar , footer , tranding tips*/
+  --color-secondary-content: #f2d176; /*tables*/
+
+  --color-accent: #06040A;
+  --color-accent-content: #f8bc15;
+
+  --color-neutral: #f0f0f0;
+  --color-neutral-content: #F0F1C5;
+
+  --radius-selector: 1rem;
+  --radius-field: 0.25rem;
+  --radius-box: 0.5rem;
+}
+
+/* ✅ Enable Both Themes */
+@plugin "daisyui" {
+  themes: lighttheme blacktheme;
+}
+
+
+* {
+  font-family: "Nunito Sans", sans-serif;
+}
+
+
+.active {
+  
+}
+
+
+
+/* 
+
+
+
+#141D26
+#3D4D55
+#A79E9C
+#D3C3B9
+#B58863
+
+*/
