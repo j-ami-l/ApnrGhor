@@ -1,19 +1,29 @@
 import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router";
 import toast from "react-hot-toast";
+import axios from "axios";
 import { AuthContext } from "../../Provider/AuthProvider/AuthProvider";
 
 const SignUp = () => {
   const [error, setError] = useState(null);
+  const [uploading, setUploading] = useState(false);
   const navigate = useNavigate();
   const { register, signIntWithGoogle, updateuser } = useContext(AuthContext);
 
-  const handleRegister = (e) => {
+  // ────────────────────────────────
+  // Email / Password Registration
+  // ────────────────────────────────
+  const handleRegister = async (e) => {
     e.preventDefault();
-    const form = e.target;
-    const formData = new FormData(form);
-    const { email, password, name, photo } = Object.fromEntries(formData.entries());
+    setError(null);
 
+    const form = e.target;
+    const name = form.name.value.trim();
+    const email = form.email.value.trim();
+    const password = form.password.value;
+    const photoFile = form.photo.files[0];
+
+    // Validate password
     const passPattern = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
     if (!passPattern.test(password)) {
       const msg =
@@ -23,35 +33,66 @@ const SignUp = () => {
       return;
     }
 
-    register(email, password)
-      .then(() => {
-        setError(null);
-        updateuser({ displayName: name, photoURL: photo })
-          .then(() => {
-            toast.success("Account created successfully! 🎉");
-            navigate("/");
-          })
-          .catch((err) => {
-            setError(err.message);
-            toast.error(err.message);
-          });
-        form.reset();
-      })
-      .catch((err) => {
-        setError(err.message);
-        toast.error(err.message);
+    // Validate file size (<=100 MB)
+    if (!photoFile) {
+      toast.error("Please select an image to upload.");
+      return;
+    }
+    if (photoFile.size > 100 * 1024 * 1024) {
+      toast.error("Image size must be 100 MB or less.");
+      return;
+    }
+
+    try {
+      setUploading(true);
+      // 1️⃣ Create user in Firebase
+      await register(email, password);
+
+      // 2️⃣ Update Firebase profile (display name only; photo comes from Cloudinary)
+      await updateuser({ displayName: name });
+
+      // 3️⃣ Send form data to backend for Cloudinary upload + DB save
+      const data = new FormData();
+      data.append("name", name);
+      data.append("email", email);
+      data.append("photo", photoFile);
+
+      await axios.post("http://localhost:5000/adduser", data, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
+
+      toast.success("Account created successfully! 🎉");
+      form.reset();
+      navigate("/");
+    } catch (err) {
+      setError(err.message);
+      toast.error(err.message);
+    } finally {
+      setUploading(false);
+    }
   };
 
-  const handleGoogleSignUp = () => {
-    signIntWithGoogle()
-      .then(() => {
-        toast.success("Signed in with Google ✅");
-      })
-      .catch((err) => {
-        setError(err.message);
-        toast.error(err.message);
+  // ────────────────────────────────
+  // Google Sign-Up / Sign-In
+  // ────────────────────────────────
+  const handleGoogleSignUp = async () => {
+    try {
+      const result = await signIntWithGoogle();
+      const user = result.user;
+
+      // Send Google user info (no file) to backend
+      await axios.post("http://localhost:5000/adduser", {
+        name: user.displayName,
+        email: user.email,
+        googlePhotoURL: user.photoURL,
       });
+
+      toast.success("Signed in with Google ✅");
+      navigate("/");
+    } catch (err) {
+      setError(err.message);
+      toast.error(err.message);
+    }
   };
 
   return (
@@ -61,9 +102,15 @@ const SignUp = () => {
           Create an Account
         </h2>
 
-        <form onSubmit={handleRegister} className="space-y-4">
+        <form
+          onSubmit={handleRegister}
+          className="space-y-4"
+          encType="multipart/form-data"
+        >
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Name
+            </label>
             <input
               name="name"
               type="text"
@@ -72,17 +119,11 @@ const SignUp = () => {
               required
             />
           </div>
+
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Photo URL</label>
-            <input
-              name="photo"
-              type="text"
-              className="input input-bordered w-full bg-gray-100"
-              placeholder="Photo URL"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Email
+            </label>
             <input
               name="email"
               type="email"
@@ -91,8 +132,11 @@ const SignUp = () => {
               required
             />
           </div>
+
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Password
+            </label>
             <input
               name="password"
               type="password"
@@ -102,11 +146,25 @@ const SignUp = () => {
             />
           </div>
 
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Upload Photo (max 100 MB)
+            </label>
+            <input
+              name="photo"
+              type="file"
+              accept="image/*"
+              className="file-input file-input-bordered w-full bg-gray-100"
+              required
+            />
+          </div>
+
           <button
             type="submit"
+            disabled={uploading}
             className="btn bg-emerald-600 hover:bg-emerald-700 text-white w-full font-semibold"
           >
-            Register
+            {uploading ? "Registering..." : "Register"}
           </button>
 
           <div className="divider text-sm text-gray-400">OR</div>
@@ -124,9 +182,16 @@ const SignUp = () => {
             Continue with Google
           </button>
 
+          {error && (
+            <p className="text-sm mt-3 text-center text-red-500">{error}</p>
+          )}
+
           <p className="text-sm mt-4 text-center text-gray-600">
             Already have an account?{" "}
-            <Link to="/login" className="text-emerald-700 font-medium hover:underline">
+            <Link
+              to="/login"
+              className="text-emerald-700 font-medium hover:underline"
+            >
               Login
             </Link>
           </p>
