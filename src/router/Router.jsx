@@ -4,28 +4,69 @@ import Home from "../Pages/Home/Home";
 import Login from "../layout/Auth/Login";
 import SignUp from "../layout/Auth/SignUp";
 import Apartments from "../Pages/Apartments/Apartments";
+import PrivateRouter from "./PrivateRouter";
+import Dashboard from "../layout/Dashboard/Dashboard";
+import DashBoardHome from "../Pages/DashBoardHome/DashBoardHome";
+import MyProfile from "../Pages/MyProfile/MyProfile";
+import AdminPrivateRoute from "./AdminPrivateRoute";
+import AdminProfile from "../Pages/AdminProfile/AdminProfile";
+import AgreementRqst from "../Pages/AgreementRqst/AgreementRqst";
 
 export const router = createBrowserRouter([
     {
-        path:'/',
+        path: '/',
         element: <Root></Root>,
         children: [
             {
                 index: true,
-                element:<Home></Home>
+                element: <Home></Home>
             },
             {
                 path: "/apartments",
-                element: <Apartments></Apartments>
+                element: <PrivateRouter>
+                    <Apartments></Apartments>
+                </PrivateRouter>
             }
         ]
     },
     {
-        path:'/login',
-        element :<Login></Login>
+        path: '/login',
+        element: <Login></Login>
     },
     {
         path: '/signup',
-        element:<SignUp></SignUp>
+        element: <SignUp></SignUp>
+    },
+    {
+        path: '/dashboard',
+        element: < Dashboard></Dashboard>,
+        children: [
+            {
+                index: true,
+                element: <DashBoardHome></DashBoardHome>
+            },
+            {
+                path: '/dashboard/myprofile',
+                element: <PrivateRouter>
+                    <MyProfile></MyProfile>
+                </PrivateRouter>
+            },
+            {
+                path: "/dashboard/adminprofile",
+                element: <PrivateRouter>
+                    <AdminPrivateRoute>
+                        <AdminProfile></AdminProfile>
+                    </AdminPrivateRoute>
+                </PrivateRouter>
+            },
+            {
+                path: "/dashboard/agreementrequests",
+                element: <PrivateRouter>
+                    <AdminPrivateRoute>
+                        <AgreementRqst></AgreementRqst>
+                    </AdminPrivateRoute>
+                </PrivateRouter>
+            }
+        ]
     }
 ])
