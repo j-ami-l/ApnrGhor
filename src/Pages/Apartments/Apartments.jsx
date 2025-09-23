@@ -24,7 +24,7 @@ const Apartments = () => {
     });
 
     const handleAgreement = async (apt) => {
-        if (!user?.name || !user?.email) {
+        if (!user) {
             toast.error("You must be logged in to apply.", {
                 style: {
                     borderRadius: "10px",

@@ -11,6 +11,8 @@ import MyProfile from "../Pages/MyProfile/MyProfile";
 import AdminPrivateRoute from "./AdminPrivateRoute";
 import AdminProfile from "../Pages/AdminProfile/AdminProfile";
 import AgreementRqst from "../Pages/AgreementRqst/AgreementRqst";
+import AllMember from "../Pages/AllMember/AllMember";
+import AddAnnouncment from "../Pages/AddAnnouncment/AddAnnouncment";
 
 export const router = createBrowserRouter([
     {
@@ -64,6 +66,22 @@ export const router = createBrowserRouter([
                 element: <PrivateRouter>
                     <AdminPrivateRoute>
                         <AgreementRqst></AgreementRqst>
+                    </AdminPrivateRoute>
+                </PrivateRouter>
+            },
+            {
+                path : "/dashboard/managemembers" , 
+                element : <PrivateRouter>
+                    <AdminPrivateRoute>
+                        <AllMember></AllMember>
+                    </AdminPrivateRoute>
+                </PrivateRouter>
+            },
+            {
+                path : "/dashboard/makeannouncement" , 
+                element : <PrivateRouter>
+                    <AdminPrivateRoute>
+                        <AddAnnouncment></AddAnnouncment>
                     </AdminPrivateRoute>
                 </PrivateRouter>
             }

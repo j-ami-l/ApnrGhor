@@ -25,9 +25,44 @@ const AgreementRqst = () => {
     },
   });
 
+  const acceptMutation = useMutation({
+    mutationFn: async ({ id, email }) => {
+      const res = await api.patch("/acceptagreement", {
+        email,
+        agree_id: id,
+      });
+      return res.data;
+    },
+    onSuccess: () => {
+      toast.success("Agreement accepted ✅");
+      queryClient.invalidateQueries(["agreementRequests"]);
+    },
+    onError: () => {
+      toast.error("Failed to accept agreement ❌");
+    },
+  });
+
+  const rejectMutation = useMutation({
+    mutationFn: async (id) => {
+      const res = await api.delete(`/deleteagreement/${id}`);
+      return res.data;
+    },
+    onSuccess: () => {
+      toast.success("Agreement rejected ❌");
+      queryClient.invalidateQueries(["agreementRequests"]);
+    },
+    onError: () => {
+      toast.error("Failed to reject agreement ❌");
+    },
+  });
+
   // Mutation for accept/reject
-  const handleAction = async (id, action) => {
-    
+  const handleAction = (id, email, action) => {
+    if (action === "accept") {
+      acceptMutation.mutate({ id, email });
+    } else if (action === "reject") {
+      rejectMutation.mutate(id);
+    }
   };
 
   if (isLoading) return <div className="text-center mt-10">Loading...</div>;
@@ -78,17 +113,18 @@ const AgreementRqst = () => {
                 </Td>
                 <Td className="border px-3 py-2">
                   <button
-                    onClick={() => handleAction(req._id, "accept")}
+                    onClick={() => handleAction(req._id, req.email, "accept")}
                     className="px-2.5 mb-1 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition"
                   >
                     Accept
                   </button>
                   <button
-                    onClick={() => handleAction(req._id, "reject")}
+                    onClick={() => handleAction(req._id, req.email, "reject")}
                     className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition"
                   >
                     Reject
                   </button>
+
                 </Td>
               </Tr>
             ))
