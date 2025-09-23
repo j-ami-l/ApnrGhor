@@ -12,7 +12,7 @@ const Dashboard = () => {
             <div className='col-span-7 lg:p-10 mx-2'>
                 <Outlet />
             </div>
-            <Toaster position="top-center" reverseOrder={false} />
+            {/* <Toaster position="top-center" reverseOrder={false} /> */}
         </div>
 
     );

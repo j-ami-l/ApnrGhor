@@ -50,7 +50,7 @@ const Sidebar = () => {
                 Home
             </NavLink>
             {/* Admin-only links */}
-            {userInfo?.role === "ADMIN" ? (
+            {userInfo?.role === "ADMIN" && (
                 <>
                     <NavLink
                         to="/dashboard/adminprofile"
@@ -108,11 +108,57 @@ const Sidebar = () => {
                     </NavLink>
                 </>
 
-            )
-                :
+            )}
+            {userInfo?.role === "member" &&
                 <>
 
 
+                    <NavLink
+                        to="/dashboard/myprofile"
+                        className={({ isActive }) =>
+                            isActive
+                                ? "px-4 py-2 rounded-lg bg-emerald-600 text-white font-semibold"
+                                : "px-4 py-2 rounded-lg text-gray-700 hover:bg-emerald-100 hover:text-emerald-700 transition"
+                        }
+                    >
+                        My Profile
+                    </NavLink>
+
+                    <NavLink
+                        to="/dashboard/makepayment"
+                        className={({ isActive }) =>
+                            isActive
+                                ? "px-4 py-2 rounded-lg bg-emerald-600 text-white font-semibold"
+                                : "px-4 py-2 rounded-lg text-gray-700 hover:bg-emerald-100 hover:text-emerald-700 transition"
+                        }
+                    >
+                        Make Payment
+                    </NavLink>
+                    <NavLink
+                        to="/dashboard/paymenthistory"
+                        className={({ isActive }) =>
+                            isActive
+                                ? "px-4 py-2 rounded-lg bg-emerald-600 text-white font-semibold"
+                                : "px-4 py-2 rounded-lg text-gray-700 hover:bg-emerald-100 hover:text-emerald-700 transition"
+                        }
+                    >
+                        Payment History
+                    </NavLink>
+
+                    <NavLink
+                        to="/dashboard/announcements"
+                        className={({ isActive }) =>
+                            isActive
+                                ? "px-4 py-2 rounded-lg bg-emerald-600 text-white font-semibold"
+                                : "px-4 py-2 rounded-lg text-gray-700 hover:bg-emerald-100 hover:text-emerald-700 transition"
+                        }
+                    >
+                        Announcements
+                    </NavLink>
+                </>
+
+            }
+            {userInfo?.role === "user" && <>
                     <NavLink
                         to="/dashboard/myprofile"
                         className={({ isActive }) =>
@@ -135,7 +181,6 @@ const Sidebar = () => {
                         Announcements
                     </NavLink>
                 </>}
-
             {/* Auth buttons */}
             {user ? (
                 <button

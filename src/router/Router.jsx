@@ -13,6 +13,8 @@ import AdminProfile from "../Pages/AdminProfile/AdminProfile";
 import AgreementRqst from "../Pages/AgreementRqst/AgreementRqst";
 import AllMember from "../Pages/AllMember/AllMember";
 import AddAnnouncment from "../Pages/AddAnnouncment/AddAnnouncment";
+import ManageCoupons from "../Pages/ManageCoupons/ManageCoupons";
+import Announcements from "../Pages/Announcements/Announcements";
 
 export const router = createBrowserRouter([
     {
@@ -84,6 +86,19 @@ export const router = createBrowserRouter([
                         <AddAnnouncment></AddAnnouncment>
                     </AdminPrivateRoute>
                 </PrivateRouter>
+            }
+            ,
+            {
+                path : "/dashboard/managecoupons" , 
+                element : <PrivateRouter>
+                    <AdminPrivateRoute>
+                        <ManageCoupons></ManageCoupons>
+                    </AdminPrivateRoute>
+                </PrivateRouter>
+            },
+            {
+                path:"/dashboard/announcements",
+                element:<Announcements></Announcements>
             }
         ]
     }
