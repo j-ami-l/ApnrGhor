@@ -3,7 +3,7 @@ import { Link, NavLink } from "react-router";
 import { FiLogIn, FiLogOut } from "react-icons/fi";
 import { AuthContext } from "../../Provider/AuthProvider/AuthProvider";
 import { UserInfoContext } from "../../Provider/UserInfoProvider/UserInfoProvider";
-
+import logo from '../../assets/logo.png'
 const Navbar = () => {
     const { logout, user } = useContext(AuthContext);
     const [menuOpen, setMenuOpen] = useState(false);
@@ -90,8 +90,8 @@ const Navbar = () => {
                 </div>
 
                 {/* Brand Name */}
-                <NavLink to="/" className="btn btn-ghost text-2xl font-bold tracking-wide text-emerald-700">
-                    ApnrGhor
+                <NavLink to="/" className="btn ml-5 md:ml-0 btn-ghost text-2xl font-bold tracking-wide text-emerald-700">
+                    <img className="w-40" src={logo} alt="" />
                 </NavLink>
             </div>
 

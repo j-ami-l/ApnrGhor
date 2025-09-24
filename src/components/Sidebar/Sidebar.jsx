@@ -4,13 +4,14 @@ import { IoMdClose } from "react-icons/io";
 import { NavLink, useNavigate } from "react-router";
 import { AuthContext } from "../../Provider/AuthProvider/AuthProvider";
 import { UserInfoContext } from "../../Provider/UserInfoProvider/UserInfoProvider";
-
+import logo from "../../assets/logo.png"
 const Sidebar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const { user, logout } = useContext(AuthContext);
     const { userInfo } = useContext(UserInfoContext);
     const navigate = useNavigate();
     const sidebarRef = useRef(null);
+
 
     // Handle logout
     const handleLogout = async () => {
@@ -218,8 +219,8 @@ const Sidebar = () => {
           transition-transform duration-300 ease-in-out
           lg:translate-x-0 lg:static`}
             >
-                <div className="p-4 border-b border-gray-200 flex justify-between items-center">
-                    <h3 className="text-2xl font-bold text-emerald-700">ApnrGhor</h3>
+                <div className="p-4 border-b border-gray-300 flex justify-between items-center">
+                    <img className="w-40" src={logo} alt="" />
                     <button
                         className="lg:hidden text-2xl text-gray-600"
                         onClick={() => setIsOpen(false)}

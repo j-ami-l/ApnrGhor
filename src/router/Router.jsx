@@ -15,6 +15,7 @@ import AllMember from "../Pages/AllMember/AllMember";
 import AddAnnouncment from "../Pages/AddAnnouncment/AddAnnouncment";
 import ManageCoupons from "../Pages/ManageCoupons/ManageCoupons";
 import Announcements from "../Pages/Announcements/Announcements";
+import UserProfile from "../Pages/UserProfile/UserProfile";
 
 export const router = createBrowserRouter([
     {
@@ -52,7 +53,7 @@ export const router = createBrowserRouter([
             {
                 path: '/dashboard/myprofile',
                 element: <PrivateRouter>
-                    <MyProfile></MyProfile>
+                    <UserProfile></UserProfile>
                 </PrivateRouter>
             },
             {
@@ -98,7 +99,9 @@ export const router = createBrowserRouter([
             },
             {
                 path:"/dashboard/announcements",
-                element:<Announcements></Announcements>
+                element:<PrivateRouter>
+                    <Announcements></Announcements>
+                </PrivateRouter>
             }
         ]
     }

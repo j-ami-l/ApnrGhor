@@ -3,7 +3,7 @@
 @plugin "daisyui";
 @plugin "@tailwindcss/forms";
 @source "./node_modules/preline/dist/*.js";
-
+@import url('https://fonts.googleapis.com/css2?family=Poiret+One&display=swap');
 
 
 @plugin "daisyui/theme" {
@@ -48,6 +48,11 @@
   
 }
 
+.poiret-one-regular {
+  font-family: "Poiret One", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
 
 
 /* 

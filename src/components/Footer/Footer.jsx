@@ -1,14 +1,14 @@
 import React from "react";
 import { FaFacebookF, FaTwitter, FaLinkedinIn } from "react-icons/fa";
 import { MdEmail, MdLocationOn, MdPhone } from "react-icons/md";
-
+import logo from '../../assets/logo_white.png'
 const Footer = () => {
   return (
     <footer className="bg-emerald-700 text-white py-10 px-6">
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Brand Info */}
         <div>
-          <h2 className="text-2xl font-bold">ApnrGhor</h2>
+          <img className="w-50" src={logo} alt="" />
           <p className="mt-2 text-sm text-emerald-100">
             A modern Building Management System to manage apartments, tenants,
             and payments with ease and reliability.
