@@ -233,7 +233,7 @@ const Sidebar = () => {
 
             {/* Mobile Header */}
             <div className="lg:hidden fixed top-0 left-0 right-0 bg-white shadow-md flex justify-between items-center px-5 py-4 z-50">
-                <h2 className="text-xl font-bold text-emerald-700">ApnrGhor</h2>
+                <img className="w-30" src={logo} alt="" />
                 {!isOpen && (
                     <button
                         className="text-2xl text-gray-600"

@@ -18,6 +18,8 @@ import Announcements from "../Pages/Announcements/Announcements";
 import UserProfile from "../Pages/UserProfile/UserProfile";
 import PaymentPage from "../Pages/Payment/PaymentPage";
 import PaymentDetails from "../Pages/Payment/PymentDetails";
+import MemberPrivateRoute from "./MemberPrivateRoute";
+import PaymentHistory from "../Pages/PaymentHistory/PaymentHistory";
 
 export const router = createBrowserRouter([
     {
@@ -108,14 +110,26 @@ export const router = createBrowserRouter([
             {
                 path:"/dashboard/makepayment",
                 element:<PrivateRouter>
-                    <PaymentDetails></PaymentDetails>
+                    <MemberPrivateRoute>
+                        <PaymentDetails></PaymentDetails>
+                    </MemberPrivateRoute>
                 </PrivateRouter>
             }
             ,
             {
                 path:"/dashboard/makepayment/:id",
                 element:<PrivateRouter>
-                    <PaymentPage></PaymentPage>
+                    <MemberPrivateRoute>
+                        <PaymentPage></PaymentPage>
+                    </MemberPrivateRoute>
+                </PrivateRouter>
+            },
+            {
+                path: "/dashboard/paymenthistory",
+                element: <PrivateRouter>
+                    <MemberPrivateRoute>
+                        <PaymentHistory></PaymentHistory>
+                    </MemberPrivateRoute>
                 </PrivateRouter>
             }
         ]

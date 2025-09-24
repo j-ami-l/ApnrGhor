@@ -1,69 +1,156 @@
-import { useQuery } from '@tanstack/react-query';
-import React, { useContext } from 'react';
-import { AuthContext } from '../../Provider/AuthProvider/AuthProvider';
-import useAxiosSecure from '../../Hooks/useAxiosSecure';
-import { Link, useNavigate } from 'react-router';
+import { useQuery } from "@tanstack/react-query";
+import React, { useContext, useState } from "react";
+import { AuthContext } from "../../Provider/AuthProvider/AuthProvider";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import { useNavigate } from "react-router";
 
 const PaymentDetails = () => {
-    const api = useAxiosSecure()
-    const { user } = useContext(AuthContext);
-    const navigate = useNavigate()
-    const { data: agreement, isLoading, isError } = useQuery({
-        queryKey: ["specificagreement", user?.email],
-        enabled: !!user?.email, // only fetch when email exists
-        queryFn: async () => {
-            const res = await api.get(`/specificagreement?email=${user?.email}`);
-            return res.data;
-        },
-    });
+  const api = useAxiosSecure();
+  const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const [month, setMonth] = useState("");
 
-    if (isLoading) return <p className="text-center mt-6">Loading agreement...</p>;
-    if (isError) return <p className="text-center mt-6 text-red-500">Failed to load agreement ❌</p>;
+  const { data: agreement, isLoading, isError } = useQuery({
+    queryKey: ["specificagreement", user?.email],
+    enabled: !!user?.email,
+    queryFn: async () => {
+      const res = await api.get(`/specificagreement?email=${user?.email}`);
+      return res.data;
+    },
+  });
 
-
-    const handePyment = (id) =>{
-        navigate(`/dashboard/makepayment/${id}`)
-    }   
-
+  if (isLoading)
+    return <p className="text-center mt-6">Loading agreement...</p>;
+  if (isError)
     return (
-        <div className="max-w-lg mx-auto mt-10 bg-white shadow-lg rounded-2xl p-6 border border-gray-100">
-            <h2 className="text-2xl font-bold text-emerald-700 text-center mb-6">
-                Payment Confirmation
-            </h2>
-
-            {/* Agreement Info */}
-            <div className="space-y-3">
-                <p><span className="font-semibold text-gray-700">Name:</span> {agreement?.name}</p>
-                <p><span className="font-semibold text-gray-700">Email:</span> {agreement?.email}</p>
-                <p><span className="font-semibold text-gray-700">Floor:</span> {agreement?.floor_no}</p>
-                <p><span className="font-semibold text-gray-700">Block:</span> {agreement?.block_name}</p>
-                <p><span className="font-semibold text-gray-700">Apartment:</span> {agreement?.apartment_no}</p>
-                <p>
-                    <span className="font-semibold text-gray-700">Status:</span>
-                    <span
-                        className={`ml-2 px-2 py-1 rounded-full text-sm ${agreement?.status === "checked"
-                                ? "bg-green-100 text-green-700"
-                                : "bg-red-100 text-red-700"
-                            }`}
-                    >
-                        {agreement?.status}
-                    </span>
-                </p>
-                <p className="text-lg font-semibold text-gray-800">
-                    Rent: <span className="text-emerald-600">৳{agreement?.rent}</span>
-                </p>
-            </div>
-
-            {/* Proceed Button */}
-            <div className="mt-6 flex justify-center">
-                <button onClick={()=>handePyment(agreement._id)} disabled={!agreement || agreement.paid}
-                    className={`px-6 py-3  rounded-lg ${!agreement.paid ? "bg-emerald-700 cursor-pointer" : "bg-emerald-200  "} text-white font-semibold shadow-md cursor-not-allowed transition`}
-                >
-                    {!agreement.paid ? "Make Payment" : "Payment Done"}
-                </button>
-            </div>
-        </div>
+      <p className="text-center mt-6 text-red-500">
+        Failed to load agreement ❌
+      </p>
     );
+
+  const handlePayment = (e) => {
+    e.preventDefault();
+    if (!month) return alert("Please select a month to pay for.");
+
+    // Navigate to payment page with id and month info
+    navigate(`/dashboard/makepayment/${agreement._id}?month=${month}`);
+  };
+
+  return (
+    <div className="max-w-lg mx-auto mt-10 bg-white shadow-lg rounded-2xl p-6 border border-gray-100">
+      <h2 className="text-2xl font-bold text-emerald-700 text-center mb-6">
+        Payment Form
+      </h2>
+
+      <form onSubmit={handlePayment} className="space-y-4">
+        {/* Member Email */}
+        <div>
+          <label className="block text-gray-700 font-semibold mb-1">
+            Member Email
+          </label>
+          <input
+            type="email"
+            value={agreement?.email || ""}
+            readOnly
+            className="w-full rounded-lg border-gray-300 bg-gray-100 px-3 py-2"
+          />
+        </div>
+
+        {/* Floor */}
+        <div>
+          <label className="block text-gray-700 font-semibold mb-1">Floor</label>
+          <input
+            type="text"
+            value={agreement?.floor_no || ""}
+            readOnly
+            className="w-full rounded-lg border-gray-300 bg-gray-100 px-3 py-2"
+          />
+        </div>
+
+        {/* Block Name */}
+        <div>
+          <label className="block text-gray-700 font-semibold mb-1">
+            Block Name
+          </label>
+          <input
+            type="text"
+            value={agreement?.block_name || ""}
+            readOnly
+            className="w-full rounded-lg border-gray-300 bg-gray-100 px-3 py-2"
+          />
+        </div>
+
+        {/* Apartment No / Room No */}
+        <div>
+          <label className="block text-gray-700 font-semibold mb-1">
+            Apartment / Room No
+          </label>
+          <input
+            type="text"
+            value={agreement?.apartment_no || ""}
+            readOnly
+            className="w-full rounded-lg border-gray-300 bg-gray-100 px-3 py-2"
+          />
+        </div>
+
+        {/* Rent */}
+        <div>
+          <label className="block text-gray-700 font-semibold mb-1">
+            Rent (৳)
+          </label>
+          <input
+            type="text"
+            value={agreement?.rent || ""}
+            readOnly
+            className="w-full rounded-lg border-gray-300 bg-gray-100 px-3 py-2"
+          />
+        </div>
+
+        {/* Month Selector */}
+        <div>
+          <label className="block text-gray-700 font-semibold mb-1">
+            Month to Pay
+          </label>
+          <select
+            value={month}
+            onChange={(e) => setMonth(e.target.value)}
+            className="w-full rounded-lg border-gray-300 px-3 py-2"
+            required
+          >
+            <option value="">Select Month</option>
+            {[
+              "January",
+              "February",
+              "March",
+              "April",
+              "May",
+              "June",
+              "July",
+              "August",
+              "September",
+              "October",
+              "November",
+              "December",
+            ].map((m) => (
+              <option key={m} value={m}>
+                {m}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Submit Button */}
+        <button
+          type="submit"
+          className={`w-full py-3 rounded-lg text-white font-semibold shadow-md transition
+            bg-emerald-700 hover:bg-emerald-800 cursor-pointer
+          `}
+        >
+          Make Payment
+        </button>
+      </form>
+    </div>
+  );
 };
 
 export default PaymentDetails;
