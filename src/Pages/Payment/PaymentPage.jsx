@@ -7,34 +7,67 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 import { useNavigate, useParams, useLocation } from "react-router";
-import toast from "react-hot-toast";    // ✅ import toast
+import toast from "react-hot-toast";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 function CheckoutForm() {
+  const api = useAxiosSecure();
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   const stripe = useStripe();
   const elements = useElements();
+
   const [loading, setLoading] = useState(false);
+  const [coupon, setCoupon] = useState(""); 
+  const [couponApplied, setCouponApplied] = useState(false);
+  const [discountInfo, setDiscountInfo] = useState(null);
 
   // ✅ get month from query param
   const queryParams = new URLSearchParams(location.search);
   const month = queryParams.get("month");
 
+  // ---- Handle Apply Coupon ----
+  const handleApplyCoupon = async () => {
+    if (!coupon.trim()) {
+      toast.error("Please enter a coupon code.");
+      return;
+    }
+
+    try {
+      const res = await api.post("/validate-coupon", { coupon, id, month }); 
+      // your backend should return { success, discount, message }
+
+      if (res.data.success) {
+        setCouponApplied(true);
+        setDiscountInfo(res.data.discount);
+        toast.success(res.data.message || "Coupon applied successfully!");
+      } else {
+        toast.error(res.data.message || "Invalid coupon.");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Error validating coupon.");
+    }
+  };
+
+  // ---- Handle Payment ----
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const res = await fetch(`http://localhost:5000/create-payment-intent`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, month }),
+      const res = await api.post("/create-payment-intent", {
+        id,
+        month,
+        coupon: couponApplied ? coupon : null, // ✅ only send if applied
       });
 
-      const { clientSecret } = await res.json();
+      const { clientSecret, message } = res.data;
+
+      if (message) toast.success(message);
 
       const result = await stripe.confirmCardPayment(clientSecret, {
         payment_method: { card: elements.getElement(CardElement) },
@@ -42,10 +75,9 @@ function CheckoutForm() {
 
       if (result.error) {
         console.error(result.error.message);
-        toast.error(`Payment failed: ${result.error.message}`); // ❌ toast error
+        toast.error(`Payment failed: ${result.error.message}`);
       } else if (result.paymentIntent.status === "succeeded") {
-        console.log("Paid for month:", month);
-        toast.success(`Payment for ${month} successful 🎉`);     // ✅ toast success
+        toast.success(`Payment for ${month} successful 🎉`);
         navigate("/dashboard/makepayment");
       }
     } catch (err) {
@@ -61,6 +93,34 @@ function CheckoutForm() {
       <p className="text-center text-gray-700">
         Paying rent for: <strong>{month || "N/A"}</strong>
       </p>
+
+      {/* ✅ Coupon Input Section */}
+      <div className="flex gap-2 items-center justify-center">
+        <input
+          type="text"
+          value={coupon}
+          onChange={(e) => setCoupon(e.target.value)}
+          placeholder="Enter coupon (optional)"
+          className="border px-3 py-2 rounded w-2/3"
+          disabled={couponApplied}
+        />
+        <button
+          type="button"
+          onClick={handleApplyCoupon}
+          className="bg-blue-600 text-white px-4 py-2 rounded"
+          disabled={couponApplied}
+        >
+          {couponApplied ? "Applied" : "Apply"}
+        </button>
+      </div>
+
+      {/* ✅ Show discount if available */}
+      {discountInfo && (
+        <p className="text-green-600 text-center">
+          🎉 Discount applied: {discountInfo}% off
+        </p>
+      )}
+
       <CardElement className="p-2 w-11/12 mx-auto border rounded" />
       <button
         disabled={!stripe || loading}
