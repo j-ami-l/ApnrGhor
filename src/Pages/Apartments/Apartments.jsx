@@ -17,7 +17,7 @@ const Apartments = () => {
     const [page, setPage] = useState(1);
     const {user} = useContext(AuthContext)
     const [submittingId, setSubmittingId] = useState(null);
-    const { data, isLoading, isError, isFetching } = useQuery({
+    const { data, isLoading, isError, isFetching , refetch } = useQuery({
         queryKey: ["apartments", page],
         queryFn: () => fetchApartments(page),
         keepPreviousData: true,
@@ -39,12 +39,13 @@ const Apartments = () => {
         setSubmittingId(apt._id);
 
         const agreementData = {
-            name: user?.name,
+            name: user?.displayName,
             email: user?.email,
             floor_no: apt.floor_no,
             block_name: apt.block_name,
             apartment_no: apt.apartment_no,
             rent: apt.rent,
+            agreement_id : apt._id
         };
 
         try {
@@ -52,6 +53,7 @@ const Apartments = () => {
                 "http://localhost:5000/addagreement",
                 agreementData
             );
+            refetch()
             toast.success(res.data.message || "Agreement request sent!", {
                 style: {
                     borderRadius: "10px",

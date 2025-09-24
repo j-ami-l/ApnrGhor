@@ -28,6 +28,7 @@ const AcceptedAgreementInfo = () => {
         Agreement Pending
       </h2>}
       <div className="space-y-2 text-gray-700">
+        <p><span className="font-semibold">Name:</span> {agreement.name}</p>
         <p><span className="font-semibold">Email:</span> {agreement.email}</p>
         <p><span className="font-semibold">Floor No:</span> {agreement.floor_no}</p>
         <p><span className="font-semibold">Block:</span> {agreement.block_name}</p>
