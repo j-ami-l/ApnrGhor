@@ -25,11 +25,9 @@ function CheckoutForm() {
   const [couponApplied, setCouponApplied] = useState(false);
   const [discountInfo, setDiscountInfo] = useState(null);
 
-  // ✅ get month from query param
   const queryParams = new URLSearchParams(location.search);
   const month = queryParams.get("month");
 
-  // ---- Handle Apply Coupon ----
   const handleApplyCoupon = async () => {
     if (!coupon.trim()) {
       toast.error("Please enter a coupon code.");
@@ -38,7 +36,6 @@ function CheckoutForm() {
 
     try {
       const res = await api.post("/validate-coupon", { coupon, id, month }); 
-      // your backend should return { success, discount, message }
 
       if (res.data.success) {
         setCouponApplied(true);
@@ -53,7 +50,6 @@ function CheckoutForm() {
     }
   };
 
-  // ---- Handle Payment ----
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -62,7 +58,7 @@ function CheckoutForm() {
       const res = await api.post("/create-payment-intent", {
         id,
         month,
-        coupon: couponApplied ? coupon : null, // ✅ only send if applied
+        coupon: couponApplied ? coupon : null,
       });
 
       const { clientSecret, message } = res.data;
@@ -94,7 +90,6 @@ function CheckoutForm() {
         Paying rent for: <strong>{month || "N/A"}</strong>
       </p>
 
-      {/* ✅ Coupon Input Section */}
       <div className="flex gap-2 items-center justify-center">
         <input
           type="text"
@@ -114,7 +109,6 @@ function CheckoutForm() {
         </button>
       </div>
 
-      {/* ✅ Show discount if available */}
       {discountInfo && (
         <p className="text-green-600 text-center">
           🎉 Discount applied: {discountInfo}% off
