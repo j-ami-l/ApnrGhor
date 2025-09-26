@@ -144,7 +144,6 @@ const Navbar = () => {
                     <Link to="/login">
                         <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-400 text-white font-semibold hover:bg-emerald-700 transition">
                             <FiLogIn />
-                            Login
                         </button>
                     </Link>
                 )}
