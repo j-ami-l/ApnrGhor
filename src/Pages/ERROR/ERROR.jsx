@@ -8,7 +8,6 @@ const ERROR = () => {
             {/* Overlay for darkening the background a bit */}
             <div className="absolute inset-0 bg-black/50"></div>
 
-            {/* Content on top of background */}
             <div className="relative text-center text-white px-4">
                 <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
                     Oops! Page Not Found
