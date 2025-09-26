@@ -2,7 +2,7 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 
 const fetchCoupons = async () => {
-  const res = await fetch("http://localhost:5000/coupons");
+  const res = await fetch("https://apnrghor-server.vercel.app/coupons");
   if (!res.ok) throw new Error("Failed to fetch coupons");
   return res.json();
 };

@@ -36,7 +36,7 @@ const Login = () => {
             const user = result.user;
 
             // Send Google user info (no file) to backend
-            await axios.post("http://localhost:5000/adduser", {
+            await axios.post("https://apnrghor-server.vercel.app/adduser", {
                 name: user.displayName,
                 email: user.email,
                 googlePhotoURL: user.photoURL,

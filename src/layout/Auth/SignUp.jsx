@@ -57,7 +57,7 @@ const SignUp = () => {
       data.append("email", email);
       data.append("photo", photoFile);
 
-      await axios.post("http://localhost:5000/adduser", data, {
+      await axios.post("https://apnrghor-server.vercel.app/adduser", data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -81,7 +81,7 @@ const SignUp = () => {
       const user = result.user;
 
       // Send Google user info (no file) to backend
-      await axios.post("http://localhost:5000/adduser", {
+      await axios.post("https://apnrghor-server.vercel.app/adduser", {
         name: user.displayName,
         email: user.email,
         googlePhotoURL: user.photoURL,

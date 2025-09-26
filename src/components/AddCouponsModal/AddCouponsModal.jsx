@@ -13,7 +13,7 @@ const AddCouponsModal = ({ refetch }) => {
   // Mutation for posting coupon
   const mutation = useMutation({
     mutationFn: async (newCoupon) => {
-      const res = await axios.post("http://localhost:5000/addcoupons", newCoupon);
+      const res = await axios.post("https://apnrghor-server.vercel.app/addcoupons", newCoupon);
       return res.data;
     },
     onSuccess: (data) => {

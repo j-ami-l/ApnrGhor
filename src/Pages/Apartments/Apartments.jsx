@@ -11,7 +11,7 @@ import Loading from "../../components/Loading";
 
 const fetchApartments = async (page, minRent, maxRent) => {
     const res = await axios.get(
-        `http://localhost:5000/apartments?page=${page}&limit=6&minRent=${minRent || 0}&maxRent=${maxRent || 999999}`
+        `https://apnrghor-server.vercel.app/apartments?page=${page}&limit=6&minRent=${minRent || 0}&maxRent=${maxRent || 999999}`
     );
     return res.data;
 };
