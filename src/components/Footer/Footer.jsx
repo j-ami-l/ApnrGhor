@@ -35,13 +35,13 @@ const Footer = () => {
             <li className="flex items-center gap-2"><MdEmail /> support@apnrghor.com</li>
           </ul>
           <div className="flex gap-4 mt-4">
-            <a href="#" className="p-2 bg-white text-emerald-700 rounded-full hover:bg-emerald-600 hover:text-white transition">
+            <a href="https://github.com/j-ami-l" className="p-2 bg-white text-emerald-700 rounded-full hover:bg-emerald-600 hover:text-white transition">
               <FaFacebookF />
             </a>
-            <a href="#" className="p-2 bg-white text-emerald-700 rounded-full hover:bg-emerald-600 hover:text-white transition">
+            <a href="https://github.com/j-ami-l" className="p-2 bg-white text-emerald-700 rounded-full hover:bg-emerald-600 hover:text-white transition">
               <FaTwitter />
             </a>
-            <a href="#" className="p-2 bg-white text-emerald-700 rounded-full hover:bg-emerald-600 hover:text-white transition">
+            <a href="https://github.com/j-ami-l" className="p-2 bg-white text-emerald-700 rounded-full hover:bg-emerald-600 hover:text-white transition">
               <FaLinkedinIn />
             </a>
           </div>
