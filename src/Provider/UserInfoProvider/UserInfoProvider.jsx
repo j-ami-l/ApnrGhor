@@ -9,7 +9,7 @@ const UserInfoProvider = ({ children }) => {
     const api = useAxiosSecure()
     const { user } = useContext(AuthContext)
     const [loading, setLoading] = useState(true)
-    const { data: userInfo = null, isFetching, refetch, isError, error } = useQuery({
+    const { data: userInfo = {}, isFetching, refetch, isError, error } = useQuery({
         queryKey: ['user', user?.email],
         queryFn: async () => {
             if (!user) return []
