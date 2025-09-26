@@ -2,6 +2,7 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import { Megaphone } from "lucide-react"; // icon
+import Loading from "../../components/Loading";
 
 const Announcements = () => {
   const api = useAxiosSecure();
@@ -16,7 +17,7 @@ const Announcements = () => {
   });
 
   if (isLoading) {
-    return <div className="text-center mt-10">Loading announcements...</div>;
+    return <Loading></Loading>
   }
 
   if (isError) {

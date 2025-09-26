@@ -2,10 +2,11 @@ import React, { useContext, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { UserInfoContext } from "../../Provider/UserInfoProvider/UserInfoProvider";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { CheckCircle, XCircle } from "lucide-react";
 import { AuthContext } from "../../Provider/AuthProvider/AuthProvider";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import Loading from "../../components/Loading";
 
 
 const fetchApartments = async (page, minRent, maxRent) => {
@@ -101,7 +102,7 @@ const Apartments = () => {
         }
     };
 
-    if (isLoading) return <div className="text-center mt-10">Loading...</div>;
+    if (isLoading) return <Loading></Loading>
     if (isError)
         return (
             <div className="text-center mt-10 text-red-500">
@@ -232,6 +233,7 @@ const Apartments = () => {
                     Next
                 </button>
             </div>
+            {/* <Toaster position="top-right" reverseOrder={false} /> */}
         </div>
     );
 };

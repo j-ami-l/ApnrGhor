@@ -11,6 +11,7 @@ import {
   Td,
 } from "react-super-responsive-table";
 import "react-super-responsive-table/dist/SuperResponsiveTableStyle.css";
+import Loading from "../../components/Loading";
 
 const PaymentHistory = () => {
   const { user } = useContext(AuthContext);
@@ -25,7 +26,7 @@ const PaymentHistory = () => {
     enabled: !!user?.email,
   });
 
-  if (isLoading) return <p className="text-center">Loading payment history...</p>;
+  if (isLoading) return <Loading></Loading>
   if (isError) return <p className="text-center text-red-500">Failed to load data</p>;
 
   return (

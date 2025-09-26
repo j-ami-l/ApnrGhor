@@ -3,6 +3,7 @@ import React, { useContext, useState } from "react";
 import { AuthContext } from "../../Provider/AuthProvider/AuthProvider";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import { useNavigate } from "react-router";
+import Loading from "../../components/Loading";
 
 const PaymentDetails = () => {
   const api = useAxiosSecure();
@@ -20,7 +21,7 @@ const PaymentDetails = () => {
   });
 
   if (isLoading)
-    return <p className="text-center mt-6">Loading agreement...</p>;
+    return <Loading></Loading>
   if (isError)
     return (
       <p className="text-center mt-6 text-red-500">

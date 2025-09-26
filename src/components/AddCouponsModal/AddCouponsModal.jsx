@@ -3,16 +3,13 @@ import { AuthContext } from "../../Provider/AuthProvider/AuthProvider";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import toast from "react-hot-toast";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
 
-const AddCouponsModal = ({refetch}) => {
+const AddCouponsModal = ({ refetch }) => {
   const [isOpen, setIsOpen] = useState(false);
   const modalRef = useRef(null);
   const { user } = useContext(AuthContext);
-
-  const [couponCode, setCouponCode] = useState("");
-  const [discount, setDiscount] = useState("");
-  const [description, setDescription] = useState("");
-
+  const api = useAxiosSecure()
   // Mutation for posting coupon
   const mutation = useMutation({
     mutationFn: async (newCoupon) => {
@@ -21,9 +18,6 @@ const AddCouponsModal = ({refetch}) => {
     },
     onSuccess: (data) => {
       toast.success(data.message || "Coupon added successfully!");
-      setCouponCode("");
-      setDiscount("");
-      setDescription("");
       setIsOpen(false);
       refetch();
     },
@@ -34,12 +28,21 @@ const AddCouponsModal = ({refetch}) => {
 
   const handleSubmitUpdate = (e) => {
     e.preventDefault();
+
+    const form = e.target;
+    const code = form.code.value.trim();
+    const discount = parseFloat(form.discount.value);
+    const description = form.description.value.trim();
+
     mutation.mutate({
-      code: couponCode,
-      discount: parseFloat(discount),
+      code,
+      discount,
       description,
       createdBy: user?.email || "admin",
+      status: "private", // ✅ default status
     });
+
+    form.reset(); // ✅ clears form after submit
   };
 
   return (
@@ -76,8 +79,7 @@ const AddCouponsModal = ({refetch}) => {
                 </label>
                 <input
                   type="text"
-                  value={couponCode}
-                  onChange={(e) => setCouponCode(e.target.value)}
+                  name="code"
                   required
                   placeholder="e.g., SAVE20"
                   className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition"
@@ -91,8 +93,7 @@ const AddCouponsModal = ({refetch}) => {
                 </label>
                 <input
                   type="number"
-                  value={discount}
-                  onChange={(e) => setDiscount(e.target.value)}
+                  name="discount"
                   required
                   placeholder="e.g., 20"
                   min="1"
@@ -107,8 +108,7 @@ const AddCouponsModal = ({refetch}) => {
                   Description
                 </label>
                 <textarea
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  name="description"
                   required
                   placeholder="Describe the coupon..."
                   rows={3}

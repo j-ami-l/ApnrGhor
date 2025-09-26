@@ -13,6 +13,7 @@ import {
 } from "react-super-responsive-table";
 import "react-super-responsive-table/dist/SuperResponsiveTableStyle.css";
 import { AuthContext } from '../../Provider/AuthProvider/AuthProvider';
+import Loading from '../../components/Loading';
 
 const AllMember = () => {
   const queryClient = useQueryClient();
@@ -60,7 +61,7 @@ const AllMember = () => {
     });
   };
 
-  if (isLoading) return <div className="text-center mt-10">Loading...</div>;
+  if (isLoading) return <Loading></Loading>
   if (isError)
     return (
       <div className="text-center mt-10 text-red-500">

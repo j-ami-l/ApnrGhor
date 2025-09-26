@@ -18,7 +18,13 @@ createRoot(document.getElementById('root')).render(
       <AuthProvider>
         <UserInfoProvider>
           <RouterProvider router={router}></RouterProvider>
-          <Toaster position="top-right" reverseOrder={false} />
+          <Toaster
+            position="top-right"
+            reverseOrder={false}
+            containerStyle={{
+              zIndex: 10000,
+            }}
+          />
         </UserInfoProvider>
       </AuthProvider>
     </QueryClientProvider>

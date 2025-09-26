@@ -20,6 +20,7 @@ import PaymentPage from "../Pages/Payment/PaymentPage";
 import PaymentDetails from "../Pages/Payment/PymentDetails";
 import MemberPrivateRoute from "./MemberPrivateRoute";
 import PaymentHistory from "../Pages/PaymentHistory/PaymentHistory";
+import ERROR from "../Pages/ERROR/ERROR";
 
 export const router = createBrowserRouter([
     {
@@ -131,7 +132,14 @@ export const router = createBrowserRouter([
                         <PaymentHistory></PaymentHistory>
                     </MemberPrivateRoute>
                 </PrivateRouter>
+            },
+            {
+                path:"/dashboard/*",
+                element : <ERROR></ERROR>
             }
         ]
+    },{
+        path: "/*",
+        element: <ERROR></ERROR>
     }
 ])

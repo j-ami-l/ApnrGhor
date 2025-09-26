@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { AuthContext } from "../../Provider/AuthProvider/AuthProvider";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
+import Loading from "../Loading";
 
 const AcceptedAgreementInfo = () => {
   const { user } = useContext(AuthContext);
@@ -16,7 +17,7 @@ const AcceptedAgreementInfo = () => {
     },
   });
 
-  if (isLoading) return <p className="text-center mt-6">Loading agreement...</p>;
+  if (isLoading) return <Loading></Loading>
   if (isError) return <p className="text-center mt-6 text-red-500">Failed to load agreement ❌</p>;
 //   if (!agreement?._id) return <p className="text-center mt-6">No accepted agreement found</p>;
 

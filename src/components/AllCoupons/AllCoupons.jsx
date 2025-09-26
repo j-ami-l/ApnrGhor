@@ -1,6 +1,5 @@
-import React from "react";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import React, { useContext } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import {
   Table,
@@ -11,20 +10,51 @@ import {
   Td,
 } from "react-super-responsive-table";
 import "react-super-responsive-table/dist/SuperResponsiveTableStyle.css";
+import { FaLock, FaLockOpen } from "react-icons/fa";
 import AddCouponsModal from "../AddCouponsModal/AddCouponsModal";
-
-const fetchCoupons = async () => {
-  const res = await axios.get("http://localhost:5000/coupons");
-  return res.data;
-};
+import Loading from "../Loading";
+import { AuthContext } from "../../Provider/AuthProvider/AuthProvider";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
 
 const AllCoupons = () => {
-  const { data: coupons = [], isLoading, isError , refetch } = useQuery({
+  const queryClient = useQueryClient();
+  const { user } = useContext(AuthContext);
+  const api = useAxiosSecure();
+
+  const { data: coupons = [], isLoading, isError, refetch } = useQuery({
     queryKey: ["coupons"],
-    queryFn: fetchCoupons,
+    queryFn: async () => {
+      const res = await api.get(`/couponsAdmin?email=${user.email}`);
+      return res.data;
+    },
   });
 
-  if (isLoading) return <p className="text-center text-gray-500">Loading...</p>;
+  // ✅ Mutation to toggle coupon status
+  const toggleStatusMutation = useMutation({
+    mutationFn: async ({ id, status }) => {
+      const res = await api.patch(
+        `/couponsstatus?id=${id}&email=${user.email}`,
+        { status }
+      );
+      return res.data;
+    },
+    onSuccess: () => {
+      toast.success("Coupon status updated ✅");
+      queryClient.invalidateQueries(["coupons"]);
+    },
+    onError: (error) => {
+      const message =
+        error?.response?.data?.message || "Failed to update status ❌";
+      toast.error(message);
+    },
+  });
+
+  const handleToggleStatus = (id, currentStatus) => {
+    const newStatus = currentStatus === "public" ? "private" : "public";
+    toggleStatusMutation.mutate({ id, status: newStatus });
+  };
+
+  if (isLoading) return <Loading />;
   if (isError) {
     toast.error("Failed to fetch coupons");
     return <p className="text-center text-red-500">Error loading coupons</p>;
@@ -45,6 +75,8 @@ const AllCoupons = () => {
               <Th className="p-3 text-left">Discount (%)</Th>
               <Th className="p-3 text-left">Description</Th>
               <Th className="p-3 text-left">Created By</Th>
+              <Th className="p-3 text-left">Status</Th>
+              <Th className="p-3 text-left">Action</Th>
             </Tr>
           </Thead>
           <Tbody>
@@ -63,11 +95,45 @@ const AllCoupons = () => {
                   <Td className="p-3 text-gray-500">
                     {coupon.createdBy || "Admin"}
                   </Td>
+                  <Td className="p-3">
+                    <span
+                      className={`px-2 py-1 rounded-full text-sm font-medium ${coupon.status === "public"
+                        ? "bg-green-100 text-green-700"
+                        : "bg-red-100 text-red-700"
+                        }`}
+                    >
+                      {coupon.status}
+                    </span>
+                  </Td>
+                  <Td className="p-3">
+                    <div className="relative group inline-block">
+                      <button
+                        onClick={() => handleToggleStatus(coupon._id, coupon.status)}
+                        disabled={toggleStatusMutation.isLoading}
+                        className={`text-xl cursor-pointer ${toggleStatusMutation.isLoading
+                            ? "text-gray-400 cursor-not-allowed"
+                            : "text-emerald-600 hover:text-emerald-800"
+                          }`}
+                      >
+                        {coupon.status === "private" ? <FaLock /> : <FaLockOpen />}
+                      </button>
+
+                      {/* Tooltip */}
+                      <span className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 
+                   bg-gray-800 text-white text-xs rounded py-1 px-2 
+                   opacity-0 group-hover:opacity-100 transition-opacity duration-300 
+                   pointer-events-none whitespace-nowrap z-50">
+                        {coupon.status === "private" ? "Make it public" : "Make it private"}
+                      </span>
+                    </div>
+
+
+                  </Td>
                 </Tr>
               ))
             ) : (
               <Tr>
-                <Td colSpan="5" className="text-center p-4 text-gray-500">
+                <Td colSpan="7" className="text-center p-4 text-gray-500">
                   No coupons found.
                 </Td>
               </Tr>
@@ -75,7 +141,8 @@ const AllCoupons = () => {
           </Tbody>
         </Table>
       </div>
-      <AddCouponsModal refetch={refetch}></AddCouponsModal>
+
+      <AddCouponsModal refetch={refetch} />
     </div>
   );
 };

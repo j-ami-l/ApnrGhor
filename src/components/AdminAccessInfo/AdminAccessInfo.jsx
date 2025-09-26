@@ -1,6 +1,7 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import useAxiosSecure from '../../Hooks/useAxiosSecure';
+import Loading from '../Loading';
 
 const AdminAccessInfo = () => {
     const api = useAxiosSecure();
@@ -13,7 +14,7 @@ const AdminAccessInfo = () => {
         },
     });
 
-    if (isLoading) return <div className="text-center mt-10">Loading stats...</div>;
+    if (isLoading) return <Loading></Loading>
     if (isError) return <div className="text-center mt-10 text-red-500">Failed to fetch stats</div>;
 
     return (
