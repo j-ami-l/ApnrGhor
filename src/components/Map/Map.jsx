@@ -103,7 +103,16 @@ export default function Map() {
 
                     {/* Apartment marker */}
                     <Marker position={[APARTMENT.lat, APARTMENT.lng]} icon={customIcon}>
-                        <Popup>{APARTMENT.name}</Popup>
+                        <Popup>
+                            <div className="text-sm">
+                                <h3 className="font-semibold text-emerald-700">{APARTMENT.name}</h3>
+                                <p className="mt-1">
+                                    This apartment is located in the <b>Lalbagh area of Dhaka</b>, close to
+                                    local shops, schools, and public transport. A quiet residential
+                                    environment with easy access to the main road.
+                                </p>
+                            </div>
+                        </Popup>
                     </Marker>
 
                     {/* User location marker */}

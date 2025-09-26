@@ -11,7 +11,7 @@ const AddAnnouncement = () => {
     const [description, setDescription] = useState("");
     const { user } = useContext(AuthContext)
     const {userInfo} = useContext(UserInfoContext)
-    // Mutation for posting announcement
+
     const mutation = useMutation({
         mutationFn: async (newAnnouncement) => {
             const res = await axios.post(
@@ -43,7 +43,7 @@ const AddAnnouncement = () => {
                 </h2>
 
                 <form onSubmit={handleSubmit} className="space-y-5">
-                    {/* Title */}
+
                     <div>
                         <label className="block text-gray-700 font-medium mb-2">
                             Title
@@ -58,7 +58,7 @@ const AddAnnouncement = () => {
                         />
                     </div>
 
-                    {/* Description */}
+
                     <div>
                         <label className="block text-gray-700 font-medium mb-2">
                             Description
@@ -73,7 +73,7 @@ const AddAnnouncement = () => {
                         />
                     </div>
 
-                    {/* Submit Button */}
+
                     <button
                         type="submit"
                         disabled={mutation.isLoading}
