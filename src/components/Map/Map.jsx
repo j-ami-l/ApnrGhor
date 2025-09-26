@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
     MapContainer,
     TileLayer,
@@ -12,7 +12,7 @@ import L from "leaflet";
 import ReactDOMServer from "react-dom/server";
 import axios from "axios";
 
-// Custom icon using react-icons
+// Custom icon
 const customIcon = new L.DivIcon({
     html: ReactDOMServer.renderToString(
         <FaMapMarkerAlt style={{ color: "red", fontSize: "28px" }} />
@@ -30,14 +30,22 @@ const APARTMENT = {
     lng: 90.3955,
 };
 
-// ⚠️ Replace with your ORS API key
-const ORS_API_KEY = "eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6ImJhMjNlYzU1N2IyODRjYzk5YTIyZjgzYTkyNmZlMjA3IiwiaCI6Im11cm11cjY0In0=";
+// ORS API Key
+const ORS_API_KEY = import.meta.env.VITE_ORS_API_KEY;
 
 export default function Map() {
     const [userLocation, setUserLocation] = useState(null);
     const [routeCoords, setRouteCoords] = useState([]);
 
-    // Handle location request
+    const apartmentPopupRef = useRef(null); // ✅ ref for popup
+
+    useEffect(() => {
+        // Open popup on mount
+        if (apartmentPopupRef.current) {
+            apartmentPopupRef.current.openPopup();
+        }
+    }, []);
+
     const handleGetLocation = () => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
@@ -46,7 +54,6 @@ export default function Map() {
                     setUserLocation(userCoords);
 
                     try {
-                        // Fetch route from ORS
                         const response = await axios.post(
                             `https://api.openrouteservice.org/v2/directions/driving-car/geojson`,
                             {
@@ -89,8 +96,7 @@ export default function Map() {
                 Apartment Location
             </h2>
 
-
-            <div className="h-[400px] w-11/12 mx-auto rounded-xl  overflow-hidden">
+            <div className="h-[400px] w-11/12 mx-auto rounded-xl overflow-hidden">
                 <MapContainer
                     center={[APARTMENT.lat, APARTMENT.lng]}
                     zoom={20}
@@ -101,9 +107,9 @@ export default function Map() {
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
 
-                    {/* Apartment marker */}
+                    {/* Apartment marker with default open popup */}
                     <Marker position={[APARTMENT.lat, APARTMENT.lng]} icon={customIcon}>
-                        <Popup>
+                        <Popup ref={apartmentPopupRef}>
                             <div className="text-sm">
                                 <h3 className="font-semibold text-emerald-700">{APARTMENT.name}</h3>
                                 <p className="mt-1">

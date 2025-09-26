@@ -1,5 +1,5 @@
 import Lottie from "lottie-react";
-import groovyWalkAnimation from "../../../public/Lonely404.json";
+import groovyWalkAnimation from "../../assets/Lonely404.json";
 
 const ERROR_Animation = () => {
   return <Lottie animationData={groovyWalkAnimation} />;
