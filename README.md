@@ -3,8 +3,7 @@
 A full-stack **Building Management System (BMS)** designed for managing a single building with role-based dashboards for **users, members, and admins**. The system provides apartment listings, agreement requests, payments with coupons, and admin-controlled announcements, all wrapped in a modern, responsive design.  
 
 🔗 **Live Site:** [ApnrGhor](https://apnr-ghor.vercel.app/)  
-📂 **Client Repository:** [ApnrGhor Client](https://github.com/j-ami-l/ApnrGhor)  
-📂 **Server Repository:** (Add your server repo link here)  
+📂 **Client Repository:** [ApnrGhor Client](https://github.com/j-ami-l/ApnrGhor) 
 
 ---
 
