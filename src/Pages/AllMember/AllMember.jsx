@@ -66,7 +66,7 @@ const AllMember = () => {
     );
 
   return (
-    <div className="p-4 sm:p-6 max-w-5xl mx-auto min-h-screen">
+    <div className="p-4 sm:p-6 w-11/12 mx-auto min-h-screen">
       <h1 className="text-2xl font-bold text-emerald-700 mb-6">
         All Members
       </h1>

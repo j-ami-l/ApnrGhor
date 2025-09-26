@@ -84,13 +84,13 @@ export default function Map() {
     };
 
     return (
-        <div className="p-4 w-11/12 mx-auto">
+        <div className="p-4 w-11/12 mx-aut0">
             <h2 className="text-2xl text-emerald-700 md:text-4xl text-center font-semibold mb-3">
                 Apartment Location
             </h2>
 
 
-            <div className="h-[400px] w-11/12 mx-auto rounded-xl overflow-hidden">
+            <div className="h-[400px] w-11/12 mx-auto rounded-xl  overflow-hidden">
                 <MapContainer
                     center={[APARTMENT.lat, APARTMENT.lng]}
                     zoom={20}
