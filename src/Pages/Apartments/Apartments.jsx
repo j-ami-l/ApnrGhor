@@ -5,6 +5,8 @@ import { UserInfoContext } from "../../Provider/UserInfoProvider/UserInfoProvide
 import toast from "react-hot-toast";
 import { CheckCircle, XCircle } from "lucide-react";
 import { AuthContext } from "../../Provider/AuthProvider/AuthProvider";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
+
 
 const fetchApartments = async (page, minRent, maxRent) => {
     const res = await axios.get(
@@ -18,7 +20,10 @@ const Apartments = () => {
     const [minRent, setMinRent] = useState("");
     const [maxRent, setMaxRent] = useState("");
 
+
+
     const { user } = useContext(AuthContext);
+    const api = useAxiosSecure()
     const [submittingId, setSubmittingId] = useState(null);
 
     const { data, isLoading, isError, isFetching, refetch } = useQuery({
@@ -66,8 +71,7 @@ const Apartments = () => {
         };
 
         try {
-            const res = await axios.post(
-                "http://localhost:5000/addagreement",
+            const res = await api.post("/addagreement",
                 agreementData
             );
             refetch();

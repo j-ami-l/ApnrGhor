@@ -84,7 +84,7 @@ export default function Map() {
     };
 
     return (
-        <div className="p-4 w-11/12 mx-aut0">
+        <div className="p-4 w-11/12 mx-auto">
             <h2 className="text-2xl text-emerald-700 md:text-4xl text-center font-semibold mb-3">
                 Apartment Location
             </h2>

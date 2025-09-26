@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import React from 'react';
+import React, { useContext } from 'react';
 import useAxiosSecure from '../../Hooks/useAxiosSecure';
 import toast from 'react-hot-toast';
 import Swal from 'sweetalert2';
@@ -12,24 +12,27 @@ import {
   Td,
 } from "react-super-responsive-table";
 import "react-super-responsive-table/dist/SuperResponsiveTableStyle.css";
+import { AuthContext } from '../../Provider/AuthProvider/AuthProvider';
 
 const AllMember = () => {
   const queryClient = useQueryClient();
   const api = useAxiosSecure();
-
+  const { user } = useContext(AuthContext)
   // Fetch all members
   const { data: members = [], isLoading, isError } = useQuery({
-    queryKey: ["allmembers"],
+    queryKey: ["allmembers", user?.email],
     queryFn: async () => {
-      const res = await api.get("/allmembers");
+      const res = await api.get(`/allmembers?email=${user.email}`);
       return res.data;
     },
+    enabled: !!user?.email, // only fetch if email exists
   });
+
 
   // Mutation: remove member
   const removeMutation = useMutation({
     mutationFn: async (id) => {
-      const res = await api.patch(`/removemember/${id}`);
+      const res = await api.patch(`/removemember?id=${id}&email=${user.email}`);
       return res.data;
     },
     onSuccess: () => {

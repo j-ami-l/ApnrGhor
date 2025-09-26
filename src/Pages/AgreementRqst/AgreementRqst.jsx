@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import toast from "react-hot-toast";
@@ -11,23 +11,25 @@ import {
   Td,
 } from "react-super-responsive-table";
 import "react-super-responsive-table/dist/SuperResponsiveTableStyle.css";
+import { AuthContext } from "../../Provider/AuthProvider/AuthProvider";
 
 const AgreementRqst = () => {
   const api = useAxiosSecure();
   const queryClient = useQueryClient();
+  const {user} = useContext(AuthContext)
 
   // Fetch all pending requests
   const { data: requests = [], isLoading, isError } = useQuery({
     queryKey: ["agreementRequests"],
     queryFn: async () => {
-      const res = await api.get("/agreementrqst");
+      const res = await api.get(`/agreementrqst?email=${user.email}`);
       return res.data;
     },
   });
 
   const acceptMutation = useMutation({
     mutationFn: async ({ id, email }) => {
-      const res = await api.patch("/acceptagreement", {
+      const res = await api.patch(`/acceptagreement?email=${user.email}`, {
         email,
         agree_id: id,
       });
@@ -44,7 +46,7 @@ const AgreementRqst = () => {
 
   const rejectMutation = useMutation({
     mutationFn: async (id) => {
-      const res = await api.delete(`/deleteagreement/${id}`);
+      const res = await api.delete(`/deleteagreement?id=${id}&email=${user.email}`);
       return res.data;
     },
     onSuccess: () => {

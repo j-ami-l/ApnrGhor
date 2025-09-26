@@ -1,23 +1,20 @@
 import React, { useContext, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
 import toast from "react-hot-toast";
 import { FiSend } from "react-icons/fi";
 import { AuthContext } from "../../Provider/AuthProvider/AuthProvider";
 import { UserInfoContext } from "../../Provider/UserInfoProvider/UserInfoProvider";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
 
 const AddAnnouncement = () => {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
-    const { user } = useContext(AuthContext)
-    const {userInfo} = useContext(UserInfoContext)
-
+    const { user } = useContext(AuthContext);
+    const { userInfo } = useContext(UserInfoContext);
+    const api = useAxiosSecure();
     const mutation = useMutation({
         mutationFn: async (newAnnouncement) => {
-            const res = await axios.post(
-                "http://localhost:5000/announcment",
-                newAnnouncement
-            );
+            const res = await api.post(`/announcment?email=${user.email}`, newAnnouncement); // ✅ secured call
             return res.data;
         },
         onSuccess: (data) => {
@@ -32,7 +29,15 @@ const AddAnnouncement = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        mutation.mutate({ title, description, email: user.email , name : userInfo?.name });
+        if (!title.trim() || !description.trim()) {
+            return toast.error("Both fields are required");
+        }
+        mutation.mutate({
+            title,
+            description,
+            email: user?.email,
+            name: userInfo?.name || "Anonymous",
+        });
     };
 
     return (
@@ -43,7 +48,7 @@ const AddAnnouncement = () => {
                 </h2>
 
                 <form onSubmit={handleSubmit} className="space-y-5">
-
+                    {/* Title */}
                     <div>
                         <label className="block text-gray-700 font-medium mb-2">
                             Title
@@ -58,7 +63,7 @@ const AddAnnouncement = () => {
                         />
                     </div>
 
-
+                    {/* Description */}
                     <div>
                         <label className="block text-gray-700 font-medium mb-2">
                             Description
@@ -73,7 +78,7 @@ const AddAnnouncement = () => {
                         />
                     </div>
 
-
+                    {/* Submit button */}
                     <button
                         type="submit"
                         disabled={mutation.isLoading}
