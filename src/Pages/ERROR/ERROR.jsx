@@ -1,14 +1,23 @@
 import React from 'react';
 import { Link } from 'react-router';
+import errorImg from '../../assets/error_img.png';
 
 const ERROR = () => {
     return (
-        <div className=''>
-            <div className='lg:w-[60%] mx-auto mt-20'>
-                <h1>Errorrrrrrr</h1>
-            </div>
-            <div className='flex items-center justify-center mt-5'>
-                <Link to={'/'}><button className='cursor-pointer px-6 py-2 bg-green-600  rounded font-semibold shadow-md transition text-white'>Back To Home</button></Link>
+        <div className='mt-30'>
+            {/* Overlay for darkening the background a bit */}
+            <div className="absolute inset-0 bg-black/50"></div>
+
+            {/* Content on top of background */}
+            <div className="relative text-center text-white px-4">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+                    Oops! Page Not Found
+                </h1>
+                <Link to="/">
+                    <button className="mt-4 sm:mt-6 px-6 py-2 sm:px-8 sm:py-3 bg-white text-black rounded font-semibold shadow-md transition hover:bg-gray-200">
+                        Back To Home
+                    </button>
+                </Link>
             </div>
         </div>
     );
